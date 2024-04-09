@@ -543,9 +543,7 @@ class EVOTX_Attendees{
 								
 								$translated = evo_lang($_kk);
 
-							?>
-							<span class='<?php echo $kk;?>'><em><?php if ($kk=="seat_type"){}else{echo $translated;} ?></em> <?php if ($kk=="seat_type"){}else{echo ":";} ?> <?php if ($kk=="seat_type"){}else{echo $k;} ?> </span>
-							<?php 
+							?><span class='<?php echo $kk;?>'><em><?php echo $translated;?></em>: <?php echo $k;?> </span><?php 
 						}
 						?>
 					</span>

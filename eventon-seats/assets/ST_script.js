@@ -1,6 +1,6 @@
 /**
  * Javascript: Seating charts for eventon
- * @version  1.2.3
+ * @version  1.2.4
  */
 jQuery(document).ready(function($){	
 
@@ -159,7 +159,11 @@ jQuery(document).ready(function($){
 		})
 		.on('evo_ajax_success_evost_get_seat_data',function(event, OO, data){
 
-			SEC = $('body').find('.evo_runningajax.evotx_ticket_purchase_section');
+			//console.log(OO);
+
+			const event_box = $('body').find('#'+'event_'+ OO.ajaxdata.eid+'_'+ OO.ajaxdata.ri);
+
+			SEC = event_box.find('.evo_runningajax.evotx_ticket_purchase_section');
 			ROW = SEC.closest('.evorow');
 
 			if(data.status=='good'){		
@@ -433,6 +437,8 @@ jQuery(document).ready(function($){
 
 			// seat click method
 				method = evost_data.direct_add ? 'cart':'preview';
+				if( type == 'unaseat' || type == 'booseat') method = 'preview';
+				
 			
 			// ajax data
 			var ajaxdataa = {};

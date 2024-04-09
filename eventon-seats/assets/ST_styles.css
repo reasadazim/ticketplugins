@@ -636,13 +636,18 @@ body .evorow.evoloading{position: relative;}
 	.evost_tix_stub_content .evost_tt_data.hastotal{font-size: 14px;}
 	body .evotx_ticket_purchase_section .evost_seats_preview .evovo_price_options p.evovo_price_option
 		{background-color: #f0f0f0!important;}
-
+/* checkout page */
+	.shop_table .cart_item.evo_event_ticket_item .item_meta_data span.evo_ticket_seats 
+	.evotx_itemmeta_secondary{flex-direction: row; background-color: #e0e0e0; font-size: 13px; font-style: italic;}
+	.shop_table .cart_item.evo_event_ticket_item .item_meta_data span.evo_ticket_seats 
+	.evotx_itemmeta_secondary b{font-style: italic;}
 /* cart pages */
 	p.evost_cart_timer{
 		    background-color: #91d87a;
 	    color: #fff;
 	    padding: 10px
 	}
+
 /* RESPONSIVE */
 @media (max-width: 900px){
 	.evost_seat_selection{overflow: hidden}

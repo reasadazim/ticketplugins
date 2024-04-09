@@ -1,7 +1,7 @@
 <?php
 /**
  * evo-tix post html
- * @version 2.2.5
+ * @version 2.2.8
  */
 
 // INITIAL VALUES
@@ -31,12 +31,6 @@
 
 	$EA = new EVOTX_Attendees();
 	$TH = $all_ticket_in_order = $EA->_get_tickets_for_order($order_id);
-
-
-//print_r( $TH );
-
-//print_r(get_post_meta($order_id,'_tixholders',true));
-//print_r(get_post_meta($post->ID,'ticket_ids',true));
 
 
 // new ticket number method in 1.7
@@ -72,7 +66,7 @@
 	endif;
 
 // get event times			
-	$event_time = $EVENT->get_formatted_smart_time('','utc');
+	$event_time = $EVENT->get_formatted_smart_time();
 
 $this_ticket_data = array();
 
@@ -81,6 +75,8 @@ $this_ticket_data = array();
 <div style='background-color:#ECECEC; padding:15px;'>
 	<div style='background-color:#fff; border-radius:8px;'>
 	<table width='100%' class='evo_metatable' cellspacing="" style='vertical-align:top' valign='top'>
+
+
 		
 		<?php // Ticket ?>
 		<tr><td colspan='2'><b><?php _e('Event Ticket','evotx');?></b>					
@@ -101,11 +97,24 @@ $this_ticket_data = array();
 			</div>
 		</td></tr>
 
+		<tr><td><?php _e('Event','evotx');?> </td>
+		<td><?php echo '<a style="white-space:normal" class="button" href="'.get_edit_post_link($event_id).'">'.get_the_title( $event_id ).': '. $event_id. '</a>';?> 
+			<?php
+				// if this is a repeat event show repeat information						
+				if(!empty($event_meta['evcal_repeat']) && $event_meta['evcal_repeat'][0]=='yes'){
+					echo "<p>".__('This is a repeating event. Repeat Instance Index','evotx').': '. $repeat_interval ."</p>";
+				}
+			?>
+		</td></tr>
 
-		<tr><td><?php _e('Woocommerce Order ID','evotx');?> #: </td><td><?php 
-			echo '<a class="button" href="'.get_edit_post_link($order_id).'">'.$order_id.'</a> <span class="evotx_wcorderstatus '.$order_status.'" style="line-height: 20px; padding: 5px 20px;">'. __(sprintf('%s',$order_status),'evotx') .'</span>';
-		?></td></tr>
 		<?php
+		$data_fields = array(
+			'wcid'=> array(
+				__('Woocommerce Order ID','evotx').'#',
+				'<a class="button" href="'.get_edit_post_link($order_id).'">'.$order_id.'</a> <span class="evotx_wcorderstatus '.$order_status.'" style="line-height: 20px; padding: 5px 20px;">'. __(sprintf('%s',$order_status),'evotx') .'</span>'
+			)
+		);
+
 		foreach( array(
 			'type'=>__('Ticket Type','evotx'),
 			'email'=>__('Order Email','evotx'),
@@ -119,73 +128,44 @@ $this_ticket_data = array();
 				if( isset( $this_ticket_data[ $k]) ) $d = $this_ticket_data[ $k];
 			}
 			$d = !$d? '--': $d;
-
-
 			if( $k=='cost') $d = $HELPER->convert_to_currency($d);
-			?>
-			<tr><td><?php echo $v;?>: </td><td><?php echo $d;?></td></tr><?php
-		}
-		?>
-		<tr><td><?php _e('Event','evotx');?>: </td>
-		<td><?php echo '<a style="white-space:normal" class="button" href="'.get_edit_post_link($event_id).'">'.get_the_title( $event_id ).': '. $event_id. '</a>';?> 
-			<?php
-				// if this is a repeat event show repeat information						
-				if(!empty($event_meta['evcal_repeat']) && $event_meta['evcal_repeat'][0]=='yes'){
-					echo "<p>".__('This is a repeating event. Repeat Instance Index','evotx').': '. $repeat_interval ."</p>";
-				}
-			?>
-		</td></tr>
 
-		<?php if($ticket_number):?>
-			<tr><td><?php _e('Ticket Number','evotx');?>: </td>
-				<td><?php 	echo $ticket_number;	?></td>
-			</tr>
-		<?php endif;?>
-		<tr><td><?php _e('Ticket Time','evotx');?>: </td><td><?php echo $event_time;?></td></tr>
-		<?php
-		// get translated checkin status
+			$data_fields[ $k] = array( $v , $d);
+		}
+
+		// ticket number and time
+		if( $ticket_number ) $data_fields['tix_num'] = array(__('Ticket Number','evotx'),$ticket_number);
+		$data_fields['tix_time'] = array(__('Ticket Time','evotx'),$event_time);
+		
+		// checked in 
 			$st_count = $TIX->checked_count($post->ID);
 			$status = $TIX->get_checkin_status_text('checked');
 			$__count = ': '.(!empty($st_count['checked'])? $st_count['checked']:'0').' out of '. $TIX_CPT->get_prop('qty');
-		?>				
-		<tr><td><?php _e('Ticket Checked-in Status','evotx');?>: </td><td><?php echo $status.$__count; ?></td></tr>
-		<?php
-			// ticket purchased by
+			$data_fields['tix_checkin'] = array(__('Ticket Checked-in Status','evotx'), $status.$__count );
+
+		// tickets purchased by
 			$purchaser_id = $TIX_CPT->get_prop('_customerid');
 			$purchaser = get_userdata($purchaser_id);
+			if($purchaser) $data_fields['tix_purch'] = array(__('Ticket Purchased by','evotx'), $purchaser->last_name.' '.$purchaser->first_name );
 
-
-
-			if($purchaser):					
-		?>
-			<tr><td><?php _e('Ticket Purchased by','evotx');?>: </td>
-				<td><?php 	echo $purchaser->last_name.' '.$purchaser->first_name;	?></td>
-			</tr>
-		<?php endif;?>
-		<?php
 		// Ticket number instance
 			$_ticket_number_instance = $TIX_CPT->get_ticket_number_instance();
-			
-		?>
-			<tr><td><?php _e('Ticket Instance Index in Order','evotx');?>: <?php echo $ajde->wp_admin->tooltips('This is the event ticket instance index in the order. Changing this will alter ticket holder values. Edit with cautions!');?></td>
-				<td class='evotx_edittable'><input style='width:100%' type='text' name='_ticket_number_instance' value='<?php 	echo $_ticket_number_instance;	?>'/>
-				</td>
-			</tr>
+			$data_fields['tix_numinst'] = array(__('Ticket Instance Index in Order','evotx') . $ajde->wp_admin->tooltips('This is the event ticket instance index in the order. Changing this will alter ticket holder values. Edit with cautions!') , "<input style='width:100%' type='text' name='_ticket_number_instance' value='{$_ticket_number_instance}'/>");
+
+		// Other Ticket Data
+			$data_fields['tix_od'] = array( '<b>'. __('Other Ticket Data','evotx') . '</b>', null, true);
+			$data_fields['tix_od1'] = array(  __('Order Item ID','evotx'), $TIX_CPT->get_order_item_id() );
+			$data_fields['tix_od2'] = array(  __('Woocommerce Product ID','evotx'), $TIX_CPT->get_prop('wcid') );
+			$data_fields['tix_od3'] = array(  "<a id='evotix_sync_with_order' data-oid='{$order_id}' class='evo_admin_btn' >".__('Sync with WC Order','evotx')."</a>".$ajde->wp_admin->tooltips('This will sync order item ids of woocommerce order with this ticket!')."<span style='margin-left:40px;'></span>", null , true);
+
+		// print HTML
+		foreach($data_fields as $key=>$val){
+			$CP = ( !empty($val[2]) && $val[2]) ? "colspan='2'":null;
+			echo "<tr><td {$CP}>". $val[0] ."</td><td>". (isset($val[1])?$val[1]:null) ."</td></tr>";
+		}
 		
-		<?php
-		// Ticket Other Information			
-		?>
-			<tr><td colspan='2'><b><?php _e('Other Ticket Data','evotx');?></b></td></tr>
-			<tr><td><?php _e('Order Item ID','evotx');?>:</td>
-				<td class='_order_item_id'><?php 	echo $TIX_CPT->get_order_item_id();	?></td>
-			</tr>
-			<tr><td><?php _e('Woocommerce Product ID','evotx');?>:</td>
-				<td class='wcid'><?php 	echo $TIX_CPT->get_prop('wcid');	?></td>
-			</tr>
-			<tr><td colspan='2'><a id='evotix_sync_with_order' data-oid='<?php echo $order_id;?>' class="evo_admin_btn" ><?php _e('Sync with WC Order','evotx');?></a><?php echo $ajde->wp_admin->tooltips('This will sync order item ids of woocommerce order with this ticket!');?><span style='margin-left:40px;'></span></td>
-			</tr>
-	
-		<?php 
+		
+		 
 		if($TH):
 
 			$ticket_number_index = $TIX_CPT->get_prop('_ticket_number_index');

@@ -191,7 +191,7 @@ class evost_admin{
 					array('label'=>'Booth ID', 'var'=>1),	
 					array('label'=>'Booth Still Available', 'var'=>1),	
 					array('label'=>'Booth Not Available', 'var'=>1),	
-					array('label'=>'Booth Seating at', 'var'=>1),		
+					array('label'=>'Booth Seating', 'var'=>1),		
 					array('label'=>'Reset Map', 'var'=>1),			
 					array('label'=>'Hover over a seat to see the pricing information.', 'var'=>1),			
 				array('type'=>'togend'),

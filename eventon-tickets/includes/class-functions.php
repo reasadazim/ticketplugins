@@ -143,6 +143,46 @@ class evotx_functions{
 
 				return false;
 			}
+
+		// Update woocommerce ticket product for event @s2.2.7
+			function update_woocommerce_product($woo_post_id, $post_id){
+		
+				$user_ID = get_current_user_id();
+				$woo_post_id = (int)$woo_post_id;
+
+				if(empty($woo_post_id)) return false;
+				
+				$post = array(
+					'ID'=>$woo_post_id,
+					//'post_author' => $user_ID,
+					'post_status' => "publish",
+					'post_type' => "product",				
+				);
+
+				// Update WC product title with event title if set
+					if( EVO()->cal->check_yn('evotx_wc_prodname_update','evcal_tx')){
+					//if(evo_settings_check_yn($this->evotx_opt, 'evotx_wc_prodname_update' )){
+						$title = EVOTX()->functions->get_ticket_product_title( $post_id );
+						if($title) $post['post_title'] = $title;
+					}
+
+				if(!empty($_REQUEST['_tx_desc']))
+					$post['post_content'] = $_REQUEST['_tx_desc'];
+
+				// create woocommerce product
+				$woo_post_id = wp_update_post( $post );
+				
+				// update product term values
+					//update_post_meta( $post_id, 'tx_woocommerce_product_id', $woo_post_id);
+					//wp_set_object_terms( $woo_post_id, $product->model, 'product_cat' );
+
+					if( isset( $_POST['tx_product_type'] ) )
+						wp_set_object_terms($woo_post_id, $_POST['tx_product_type'], 'product_type');		
+
+				// final save
+				$this->save_product_meta_values($woo_post_id, $post_id);			
+			}
+
 		// Save woocommerce product meta values
 			function save_product_meta_values($woo_post_id, $post_id, $method='post'){
 

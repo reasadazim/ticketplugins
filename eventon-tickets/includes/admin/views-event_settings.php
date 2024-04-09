@@ -1,7 +1,7 @@
 <?php
 /** 
  * Ticket Event Settings
- * @version 2.1.1
+ * @version 2.2.7
  */
 
 $settings = new EVO_Settings();
@@ -58,12 +58,15 @@ $fields = array();
 			'type'=>'input',
 			'name'=> __('Ticket Price', 'evotx').' '.__('(Required*)', 'evotx') .' ('.$__woo_currencySYM .')',
 			'value'=> evo_meta($woometa, '_regular_price'),
-			'tooltip'=> __('Ticket price is required for tickets product to add to cart otherwise it will return an undefined error.','evotx')
-		);$fields['_sale_price'] = array(
+			'tooltip'=> __('Ticket price is required for tickets product to add to cart otherwise it will return an undefined error.','evotx'),
+			'nesting_start'=>'_regular_price'
+		);
+		$fields['_sale_price'] = array(
 			'id'=>'_sale_price',
 			'type'=>'input',
 			'name'=> __('Sale Price', 'evotx').' ('.$__woo_currencySYM .')',
 			'value'=> evo_meta($woometa, '_sale_price'),
+			'nesting_end'=>true
 		);
 	endif;
 
@@ -73,13 +76,14 @@ $fields = array();
 		'type'=>'input',
 		'name'=> __('Ticket SKU', 'evotx').' '.__('(Required*)', 'evotx'),
 		'value'=> $EVENT->get_wc_prop('_sku'),
-		'tooltip'=> __('SKU refers to a Stock-keeping unit, a unique identifier for each distinct menu item that can be ordered. You must enter a SKU or else the tickets might not function correct.','evotx')
+		'tooltip'=> __('SKU refers to a Stock-keeping unit, a unique identifier for each distinct menu item that can be ordered. You must enter a SKU or else the tickets might not function correct.','evotx'),
+		'nesting_start'=>'_sku'
 	);
 	$fields['_tx_desc'] =array(
 		'id'=>'_tx_desc',
 		'type'=>'input',
 		'name'=> __('Short Ticket Detail', 'evotx'),
-		'value'=> $EVENT->get_wc_prop('_tx_desc'),
+		'value'=> $EVENT->get_wc_prop('_tx_desc'),'nesting_end'=>true
 	);
 
 // name your price
@@ -283,7 +287,7 @@ $fields['_tx_show_guest_list'] = array(
 		'id'=>'_tx_subtiltle_text',
 		'type'=> 'wysiwyg',
 		'value'=> $EVENT->get_wc_prop('_tx_subtiltle_text'),
-		'name'=> __('Ticket Field description','evotx'),
+		'name'=> __('Ticket Field Description','evotx'),
 		'tooltip'=> __('Use this to type instruction text that will appear above add to cart section on calendar.','evotx')
 	);
 
@@ -345,7 +349,7 @@ $fields['_tx_show_guest_list'] = array(
 		$fields['_tx_inq_note'] =array(
 			'id'=>'_tx_inq_note',
 			'type'=>'notice',
-			'name'=> __('NOTE: Front-end fields for Inquiries form can be customized from','evotx') . " <a style='color:#B3DDEC' href='". admin_url() ."admin.php?page=eventon&tab=evcal_2'>".__('EventON Languages','evotx') ."</a>",
+			'name'=> __('NOTE: Front-end fields for Inquiries form can be customized from','evotx') . " <a style='' href='". admin_url() ."admin.php?page=eventon&tab=evcal_2'>".__('EventON Languages','evotx') ."</a>",
 			
 		);
 	$fields['_allow_inquire2'] = array(	'type'=>'end_afterstatement');

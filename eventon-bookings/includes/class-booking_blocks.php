@@ -7,7 +7,7 @@ class EVOBO_Blocks{
 	public $dataset = array(); // all blocks data for the event
 	public $item_data = array(); // single block item data
 	public $block_id = false;
-	public $date_format = 'm-d-Y'; // Bappy
+	public $date_format = 'Y-m-d';
 	public $time_format = 'H:i';
 	public $is_admin = false;
 	public $event, $event_id, $wcid, $DD, $timezone0, $current_time;

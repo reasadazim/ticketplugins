@@ -1,5 +1,15 @@
 Tickets (TX) addon for EventON Plugin
 ====================================
+v 2.2.8 (2024-3-8)
+FIXED: undefined variable $head
+FIXED: incorrect event time on event tickets post edit page
+FIXED: confirmation email event time
+
+v 2.2.7 (2024-2-23)
+FIXED: wc based variation not working on event calendar
+FIXED: updating event delete various set ticket information
+FIXED: Event location text translate in admin side
+
 v 2.2.6 (2024-2-1)
 FIXED: standalone button time and location missing
 FIXED: event time incorrect in cart pages

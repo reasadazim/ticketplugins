@@ -551,7 +551,7 @@ class EVOTX_post_meta_boxes{
 			echo ob_get_clean();
 		}
 
-	// save new ticket and create matching WC product @u 2.2.5
+	// save new ticket and create matching WC product @u 2.2.7
 		function evotx_save_ticket_info($fields_ar, $post_id, $EVENT, $post_data){			
 
 			foreach(apply_filters('evotx_save_eventedit_page', array(
@@ -564,13 +564,7 @@ class EVOTX_post_meta_boxes{
 				}
 			}
 
-			// run update wc product information 
-			$WCID = $EVENT->get_prop('tx_woocommerce_product_id')? (int)$EVENT->get_prop('tx_woocommerce_product_id'):false;
-			if( $WCID ){
-				global $evotx_admin;
-				$evotx_admin->update_woocommerce_product( $WCID, $EVENT->ID );
-			}
-
+			
 			// after saving event tickets data
 			do_action('evotx_after_saving_ticket_data', $post_id);			
 		}

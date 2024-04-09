@@ -73,7 +73,7 @@ class evotx_admin_ajax{
 						update_option('woocommerce_manage_stock','yes');								
 					
 					if($post_exists){
-						$evotx_admin->update_woocommerce_product($wcid, $EVENT->ID);
+						EVOTX()->functions->update_woocommerce_product($wcid, $EVENT->ID);
 					}else{
 						$create_new = true;	
 					}						
@@ -88,7 +88,7 @@ class evotx_admin_ajax{
 							$post_exists = $evotx_admin->post_exist($wcid);
 
 							if($post_exists){								
-								$evotx_admin->update_woocommerce_product($wcid, $EVENT->ID);	
+								EVOTX()->functions->update_woocommerce_product($wcid, $EVENT->ID);	
 							}else{	$create_new = true;	}
 
 						}else{	$create_new = true;	}					

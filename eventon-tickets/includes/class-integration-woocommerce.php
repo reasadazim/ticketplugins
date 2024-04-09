@@ -281,6 +281,9 @@ class EVOTX_WC{
 
 		// CART ticket item name
 		    function cart_item_name_box($product_name, $values, $cart_item_key ) {
+		    	
+		    	//print_r($values);
+
 		    	if(!isset($values['evotx_repeat_interval_wc'])) return $product_name;
 		    	if( empty($values['evotx_event_id_wc']) ) return $product_name;
 
@@ -1102,7 +1105,7 @@ class EVOTX_WC{
 				}
 			}
 
-			update_post_meta(1, 'aa', $DD);
+			//update_post_meta(1, 'aa', $DD);
 
 
 		}
@@ -1117,7 +1120,7 @@ class EVOTX_WC{
 		function ordermeta_display_key( $display_key, $meta, $class){
 
 			if( $display_key == 'Event-Time') $display_key = $this->lang('Event Time');
-			if( $display_key == 'Event-Location') $display_key = $this->lang('Event Location');
+			if( $display_key == 'Event-Location') $display_key = $this->langX('Event Location','evoTX_005c');
 			return $display_key;
 		}
 

@@ -528,6 +528,48 @@ class EVOST_Seats{
 				'seat'=> $data[2],
 			);
 		}
+
+		function get_readable_seat_data_by_slug($slug){
+			$this->_get_seat_type_by_slug($slug);
+			if($this->seat_type != 'seat') return false;
+
+			$data = explode('-', $this->seat_slug);
+			$this->section = $data[0];
+			$this->row = $data[1];
+			$this->seat = $data[2];
+
+			$sections = $this->seats_data;
+
+			$output = array('section'=>'','row'=>'','seat'=> '');
+
+			foreach($this->seats_data as $section_id=>$section){
+				if( $section_id != $this->section ) continue;
+
+				$output['section'] = $section['section_index'];
+
+				if( !isset($section['rows']) ) continue;
+
+				foreach($section['rows'] as $row_id=>$row){
+					if( $this->row != $row_id ) continue;
+					$output['row'] = $row['row_index'];
+
+					foreach($row as $seat_id=>$seat){
+						if( $seat_id != $this->seat) continue;
+						$output['seat'] = $seat['number'];
+
+					}
+
+					//print_r( $row);
+
+				}
+			}
+			//print_r($output);
+
+			return $output;
+
+
+		}
+
 // All section 
 	// update all the seats
 		function update_all_seats($FF, $VV){

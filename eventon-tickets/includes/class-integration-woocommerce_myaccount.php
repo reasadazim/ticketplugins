@@ -68,7 +68,7 @@ class EVOTX_WC_my_account{
 
 					foreach($events as $ri=>$ticket_list){
 
-						$html = $row = '';
+						$html = $head = $row = '';
 
 						$is_past = true;
 						

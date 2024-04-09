@@ -5,7 +5,7 @@
  * @author 		AJDE
  * @category 	Admin
  * @package 	EventON-st/classes
- * @version     1.2
+ * @version     1.2.4
  */
 class evost_tickets{
 	
@@ -36,7 +36,7 @@ class evost_tickets{
 		add_action('evotx_cart_tickets_updated', array($this, 'cart_seats_updated'), 10, 2);
 
 		// Cart view
-		add_filter('evotx_ticket_item_meta_data',array($this,'cart_ticket_meta_data'),1,3);
+		add_filter('evotx_cart_item_name',array($this,'add_to_cart_item_names'),1,4);
 		add_filter('evotx_cart_item_quantity',array($this,'cart_item_quantity'),1,4);
 		add_action('evotix_cart_item_validation', array($this, 'cart_validation'), 10, 3);
 
@@ -241,38 +241,15 @@ class evost_tickets{
 		}
 
 	// CART VIEW
-		function cart_ticket_meta_data($data, $values, $EVENT){
-			if(!isset($values['evost_data'])) return $data;
-			if(isset($values['evost_data']['seat_slug'])){
-
-				// additional text in checkout seat item meta data
-					$add = '';
-
-				// una seat
-				if( (isset($values['evost_data']['seat_type']) && $values['evost_data']['seat_type']=='unaseat') ){
-					$add = evo_lang('Unassigned Seating at') . ' ';
-					$data['evost_data_2'] = array(
-						evo_lang('Unassigned Seat Section ID'),  $values['evost_data']['seat_slug']
-					);
-				}
-
-				// booth seat
-				if( (isset($values['evost_data']['seat_type']) && $values['evost_data']['seat_type']=='booseat') ){
-					$add = evo_lang('Booth Seating at') . ' ';
-
-					$data['evost_data_2'] = array(
-						evo_lang('Booth ID'),  $values['evost_data']['seat_slug']
-					);
-				}
+		// cart item name alteration @since 1.2.4
+		function add_to_cart_item_names($product_name, $EVENT, $values, $cart_item_key){
+			if(isset($values['evost_data'])){
 				
-
-				$data['evost_data'] = array(
-					evo_lang('Seat Information'),  
-					$add . $values['evost_data']['seat_number']
-				);
+	        	$product_name .= $this->get_seat_display_html($values['evost_data'], $EVENT );  
 			}
-			return $data;
+			return $product_name;
 		}
+		
 
 		function cart_item_quantity($boolean, $product, $cart_item_key, $cart_item ){
 			if(!isset($cart_item['evost_data'])) return $boolean;
@@ -431,6 +408,50 @@ class evost_tickets{
 			return $array;
 		}
 
+	// Display Seat Data
+		function get_seat_display_html( $evost_data, $EVENT){
+			$seat_type = isset($evost_data['seat_type']) ? $evost_data['seat_type']: false;
+
+			if( !$seat_type ) return ;
+
+			ob_start();
+        	?>
+        	<div class='item_meta_data additional_data'>
+			<span class='evo_ticket_seats'>
+				<b><?php evo_lang_e('Seat Information');?></b>
+				<?php
+
+				$meta_data = array();
+
+				if( $seat_type == 'booseat'):
+					$meta_data['type'] = array( evo_lang('Seat Type') , evo_lang('Booth Seating'));
+					$meta_data['section'] = array( evo_lang('Booth') , $evost_data['seat_slug']);
+				endif;
+				if( $seat_type == 'unaseat'):
+					$meta_data['type'] = array( evo_lang('Seat Type') , evo_lang('Unassigned Seating'));
+					$meta_data['section'] = array( evo_lang('Unassigned Seat Section ID') , $evost_data['seat_slug']);
+				endif;
+				if( $seat_type == 'seat'):
+					$SEAT = new EVOST_Seats($EVENT);
+					$seat_data = $SEAT->get_readable_seat_data_by_slug( $evost_data['seat_slug'] );
+
+					$meta_data['section'] = array( evo_lang('Section') , $seat_data['section']);
+					$meta_data['row'] = array( evo_lang('Row') , $seat_data['row']);
+					$meta_data['seat'] = array( evo_lang('Seat') , $seat_data['seat']);
+				endif;
+
+				foreach($meta_data as $key=>$val){
+					echo "<span class='evotx_itemmeta_secondary'><b>" . $val[0] . "</b>{$val[1]}</span>";
+				}
+
+				?>
+			</span>
+			</div>
+			<?php
+			return ob_get_clean();
+
+		}
+
 // OTHER
 	// order item meta fields that are hidden from view - admin order edit page
 		function hide_order_item_metafields($array){
@@ -462,7 +483,7 @@ class evost_tickets{
 			
 			<tr><td><?php _e('Seat Number','eventon');?>: </td>
 			<td><?php echo $ticketItem_meta['Seat-Number'][0];?></td></tr>
-			<!-- Bappy -->
+			<tr><td><?php _e('Seat Type','eventon');?>: </td>
 			<td><?php echo EVOST()->frontend->get_seat_type( $ticketItem_meta['_evost_seat_slug'][0] , true );?></td></tr>
 
 		<?php endif;

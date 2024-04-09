@@ -4,10 +4,10 @@
  * Plugin URI: http://www.myeventon.com/addons/event-lists-items
  * Description: Seat selection feature
  * Author: Ashan Jay
- * Version: 1.2.3
+ * Version: 1.2.4
  * Author URI: http://www.ashanjay.com/
  * Requires at least: 6.0
- * Tested up to: 6.3
+ * Tested up to: 6.4.2
  * 
  * Text Domain: evost
  * Domain Path: /lang/
@@ -16,9 +16,9 @@
 
 class EVO_seats{
 	
-	public $version='1.2.3';
-	public $eventon_version = '4.4.2';
-	public $evotx_version = '2.2.2';
+	public $version='1.2.4';
+	public $eventon_version = '4.5';
+	public $evotx_version = '2.2.8';
 	public $name = 'Event Seats';
 	public $id = 'EVOST';
 			

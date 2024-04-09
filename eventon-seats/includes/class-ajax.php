@@ -170,8 +170,6 @@ class EVOST_ajax{
 					}					
 				}	
 
-
-
 			// base price for seat
 				$seat_price = apply_filters('evost_seat_base_price',  $ST->get_price(), $ST);
 				$Helper->base_price_html( $seat_price );		

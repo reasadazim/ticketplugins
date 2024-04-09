@@ -1,5 +1,11 @@
 ﻿Event Seats (ST) addon for EventON Plugin
 ====================================
+v 1.2.4 (2023-3-8)
+FIXED: one click add to cart not working for unassigned seating
+FIXED: seat added to cart showing seat text under section
+FIXED: Seat information in cart to show seat details similar to on event
+FIXED: multiple events on page not loading seat map correctly
+
 v 1.2.3 (2023-8-21)
 FIXED: one click add to cart not working right
 

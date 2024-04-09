@@ -390,7 +390,7 @@ class evotx_front{
 
 					<span class='evcal_evdata_icons'><i class='fa <?php echo get_eventON_icon('evcal__evotx_001', 'fa-tags',$helpers['evOPT'] );?>'></i></span>
 					<div class='evcal_evdata_cell'>							
-						<h3 class='evo_h3'><?php $this->langEX('Ticket Selection', 'evoTX_001');?></h3>
+						<h3 class='evo_h3'><?php $this->langEX('Ticket Section Title', 'evoTX_001');?></h3>
 						
 						<?php if( $event->get_wc_prop('_tx_text')) : // subtitle text ?>
 							<p class='evo_data_val'><?php echo $event->get_wc_prop('_tx_text');?></p>	

@@ -78,7 +78,7 @@ class EVOST_Temp{
 						<div class="evost_tt_content">
 							<div class="evost_ttc_data section">
 								<span class="label"><?php evo_lang_e('SEC');?></span>
-								<span class="value sectionvalue">{{section}}{{seat_type}}</span>
+								<span class="value sectionvalue">{{section}}</span>
 							</div>
 							<div class="evost_ttc_data row">
 								<span class="label"><?php evo_lang_e('ROW');?></span>
